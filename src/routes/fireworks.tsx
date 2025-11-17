@@ -73,15 +73,15 @@ function FireworksPage() {
         <p className="text-gray-600 mb-4">
           {gestureMode
             ? "Close your fist and open your palm to launch fireworks! ✊➡️🖐️"
-            : "Click or tap anywhere on the canvas to launch fireworks!"}
+            : "Click or tap anywhere on the canvas to launch fireworks!, you can see your friends fireworks too!"}
         </p>
         <div className="flex gap-4 items-center mb-4">
-          <button
+          {/* <button
             onClick={() => setGestureMode(!gestureMode)}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             {gestureMode ? "Switch to Click Mode" : "Switch to Gesture Mode"}
-          </button>
+          </button> */}
           {stats && (
             <div className="flex gap-4 text-sm">
               <div>
