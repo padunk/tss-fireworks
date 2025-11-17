@@ -76,12 +76,12 @@ function FireworksPage() {
             : "Click or tap anywhere on the canvas to launch fireworks!, you can see your friends fireworks too!"}
         </p>
         <div className="flex gap-4 items-center mb-4">
-          {/* <button
+          <button
             onClick={() => setGestureMode(!gestureMode)}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             {gestureMode ? "Switch to Click Mode" : "Switch to Gesture Mode"}
-          </button> */}
+          </button>
           {stats && (
             <div className="flex gap-4 text-sm">
               <div>
@@ -143,6 +143,7 @@ function FireworksCanvas({
   const fireworksRef = useRef<FireworksHandlers>(null);
   const processedFireworksRef = useRef<Set<Id<"fireworks_active">>>(new Set());
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoPreviewRef = useRef<HTMLVideoElement>(null);
 
   // Launch firework mutation
   const { mutate: launchFirework } = useMutation({
@@ -180,6 +181,24 @@ function FireworksCanvas({
 
   // Get current hand states for UI display
   const handStates = getAllHandStates();
+
+  // Setup video preview element
+  useEffect(() => {
+    const videoPreview = videoPreviewRef.current;
+    if (videoPreview && videoElement && gestureMode) {
+      videoPreview.srcObject = videoElement.srcObject;
+      // Handle play promise to avoid AbortError
+      const playPromise = videoPreview.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          // Ignore AbortError when video is being reloaded
+          if (error.name !== "AbortError") {
+            console.error("Video play error:", error);
+          }
+        });
+      }
+    }
+  }, [videoElement, gestureMode]);
 
   // Handle canvas click/tap to launch firework (only when not in gesture mode)
   const handleCanvasClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -300,12 +319,7 @@ function FireworksCanvas({
           {videoElement && (
             <div className="absolute top-4 right-4 w-48 h-36 rounded-lg overflow-hidden border-2 border-white/30 bg-black/50">
               <video
-                ref={(el) => {
-                  if (el && videoElement) {
-                    el.srcObject = videoElement.srcObject;
-                    el.play();
-                  }
-                }}
+                ref={videoPreviewRef}
                 autoPlay
                 playsInline
                 muted

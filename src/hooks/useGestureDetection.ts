@@ -42,6 +42,12 @@ export function useGestureDetection(options: GestureDetectionOptions = {}) {
   const streamRef = useRef<MediaStream | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const lastDetectionTimeRef = useRef<number>(0);
+  const onGestureDetectedRef = useRef(onGestureDetected);
+
+  // Keep ref updated
+  useEffect(() => {
+    onGestureDetectedRef.current = onGestureDetected;
+  }, [onGestureDetected]);
 
   // Initialize GestureRecognizer
   const initializeGestureRecognizer = useCallback(async () => {
@@ -175,15 +181,15 @@ export function useGestureDetection(options: GestureDetectionOptions = {}) {
 
       setDetectedHands(hands);
 
-      if (onGestureDetected && hands.length > 0) {
-        onGestureDetected(hands);
+      if (onGestureDetectedRef.current && hands.length > 0) {
+        onGestureDetectedRef.current(hands);
       }
     } catch (err) {
       console.error("Gesture detection error:", err);
     }
 
     animationFrameRef.current = requestAnimationFrame(detectGestures);
-  }, [onGestureDetected]);
+  }, []);
 
   // Initialize everything when enabled
   useEffect(() => {
@@ -219,7 +225,8 @@ export function useGestureDetection(options: GestureDetectionOptions = {}) {
         videoRef.current.srcObject = null;
       }
     };
-  }, [enabled, initializeGestureRecognizer, setupWebcam, detectGestures]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled]);
 
   return {
     isInitialized,
