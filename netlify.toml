@@ -1,7 +1,7 @@
 [build]
-  command = "npx convex deploy --cmd 'npm run build'"
+  command = "bunx convex deploy --cmd 'bun run build'"
   publish = "dist/client"
 
 [dev]
-  command = "npm run dev"
+  command = "bun run dev"
   port = 3000
