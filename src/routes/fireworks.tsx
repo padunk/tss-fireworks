@@ -69,7 +69,7 @@ function FireworksPage() {
   return (
     <div className="p-4">
       <div className="mb-4">
-        <h1 className="text-3xl font-bold mb-2">🎆 Fireworks</h1>
+        <h1 className="text-3xl font-bold mb-2">🎆 VireWorks</h1>
         <p className="text-gray-600 mb-4">
           {gestureMode
             ? "Close your fist and open your palm to launch fireworks! ✊➡️🖐️"
